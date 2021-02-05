@@ -1,0 +1,44 @@
+﻿@page "/deletetehtava/{TehtavaId}"
+@inject HttpClient Http
+@inject NavigationManager navigationManager
+@using TALA.Shared
+
+<h3>Poista</h3>
+<p>Haluatko varmasti poistaa Tehtävän : <b>@tehtava.Kuvaus</b></p>
+<br />
+<div class="col-md-4">
+    <table class="table">
+        <tr>
+            <td>Tehtävä</td>
+            <td>@tehtava.Kuvaus</td>
+        </tr>
+    </table>
+    <div class="form-group">
+        <input type="button" value="Poista" @onclick="@DeleteAsync" class="btn btn-danger" />
+        <input type="button" value="Peruuta" @onclick="@Cancel" class="btn btn-info" />
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string TehtavaId { get; set; }  //ei toiminut int tietotyypillä vaikka kannassa TehtäväId on int
+
+    Tehtavamodel tehtava = new Tehtavamodel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        tehtava = await Http.GetFromJsonAsync<Tehtavamodel>("api/Tehtava/" + TehtavaId);
+    }
+
+    async Task DeleteAsync()
+    {
+        await Http.DeleteAsync("api/Tehtava/" + TehtavaId);
+        navigationManager.NavigateTo("tehtavalista");
+    }
+
+    void Cancel()
+    {
+        navigationManager.NavigateTo("tehtavalista");
+    }
+}
+

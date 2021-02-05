@@ -1,0 +1,47 @@
+﻿@page "/edittehtava/{TehtavaId}"
+@inject HttpClient Http
+@inject NavigationManager navigationManager
+@using TALA.Shared
+
+<h3>Muokkaa Tehtävää</h3>
+<hr />
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="Ekoteko" class="control-label">Tehtävä</label>
+                <input for="Ekoteko" class="form-control" @bind="tehtava.Kuvaus" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group">
+            <input type="button" class="btn btn-warning" @onclick="@UpDateTehtavaAsync" value="Muokkaa" />
+            <input type="button" class="btn btn-success" @onclick="@Cancel" value="Peruuta" />
+        </div>
+    </div>
+</form>
+
+@code {
+    [Parameter]
+    public string TehtavaId { get; set; }  //ei toiminut int tietotyypillä vaikka kannassa TehtäväId on int
+
+    Tehtavamodel tehtava = new Tehtavamodel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        tehtava = await Http.GetFromJsonAsync<Tehtavamodel>("api/Tehtava/" + TehtavaId);
+    }
+
+    async Task UpDateTehtavaAsync()
+    {
+        await Http.PutAsJsonAsync("api/Tehtava/" + TehtavaId, tehtava);
+        navigationManager.NavigateTo("tehtavalista");
+    }
+
+    void Cancel()
+    {
+        navigationManager.NavigateTo("tehtavalista");
+    }
+}
+

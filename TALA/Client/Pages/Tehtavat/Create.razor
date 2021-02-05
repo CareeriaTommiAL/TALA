@@ -1,0 +1,31 @@
+﻿@page "/tehtavat/create"
+@inject HttpClient Http
+@inject NavigationManager navigationManager
+@using TALA.Shared
+
+<h3>Create</h3>
+
+<EditForm Model="@tehtava" OnValidSubmit="@CreateTehtavaAsync">
+    <div class="form-field">
+        <label>Anna uusi tehtava.</label>
+        <InputText @bind-Value="@tehtava.Kuvaus"></InputText>
+    </div>
+    <button type="submit" class="btn btn-info">Tallenna</button>
+    <button class="btn btn-secondary" @onclick="@BackClick">Palaa Tehtaviin</button>
+</EditForm>
+
+@code {
+    Tehtavamodel tehtava = new Tehtavamodel();
+
+    async Task CreateTehtavaAsync()
+    {
+        await Http.PostAsJsonAsync("api/Tehtava", tehtava);
+        BackClick();
+    }
+
+    void BackClick()
+    {
+        navigationManager.NavigateTo("tehtavalista");
+    }
+}
+

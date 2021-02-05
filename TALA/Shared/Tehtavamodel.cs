@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace TALA.Shared
 {
-    public class Tehtava
+    public class Tehtavamodel
     {
         public int TehtavaId { get; set; }
-        public string Anto { get; set; }
+        public string Kuvaus { get; set; }
     }
 }

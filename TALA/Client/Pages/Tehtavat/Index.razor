@@ -1,0 +1,54 @@
+﻿@page "/tehtavalista"
+@inject HttpClient Http
+@inject NavigationManager navigationManager
+@using TALA.Shared
+
+
+<h3>Tehtävät</h3>
+
+<p>
+    <a href="/tehtavat/create">Luo uusi tehtävä</a>
+</p>
+
+
+@if (tehtavat == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Tehtävä</th>
+            </tr>
+        </thead>
+    </table>
+    <tbody>
+        @foreach (var item in tehtavat)
+        {
+            <tr>
+                <td>@item.Kuvaus</td>
+                <td><a href="/edittehtava/@item.TehtavaId">Muokkaa</a></td>
+                <td><a href="/deletetehtava/@item.TehtavaId">Poista</a></td>
+            </tr>
+        }
+    </tbody>
+
+}
+
+@code {
+    private List<Tehtavamodel> tehtavat { get; set; } = new List<Tehtavamodel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadTehtavaAsync();
+    }
+
+    async Task LoadTehtavaAsync()
+    {
+        tehtavat = await Http.GetFromJsonAsync<List<Tehtavamodel>>("api/Tehtava");
+    }
+}
+
