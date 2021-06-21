@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TALA.Server.Data;
 
-namespace TALA.Server.Data.Migrations
+namespace TALA.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210208173615_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -322,27 +324,25 @@ namespace TALA.Server.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("TALA.Server.Models.Suoritus", b =>
+            modelBuilder.Entity("TALA.Shared.Suoritus", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("TehtavaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Suorituskerrat")
+                    b.Property<int>("SuoritusId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasDefaultValue(0);
+                        .UseIdentityColumn();
 
-                    b.HasKey("UserId", "TehtavaId");
+                    b.Property<DateTime>("Suoritusaika")
+                        .HasColumnType("datetime2");
 
-                    b.HasIndex("TehtavaId");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("SuoritusId");
 
                     b.ToTable("Suoritukset");
                 });
 
-            modelBuilder.Entity("TALA.Server.Models.Tehtava", b =>
+            modelBuilder.Entity("TALA.Shared.Tehtava", b =>
                 {
                     b.Property<int>("TehtavaId")
                         .ValueGeneratedOnAdd()
@@ -352,7 +352,12 @@ namespace TALA.Server.Data.Migrations
                     b.Property<string>("Kuvaus")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("SuoritusId")
+                        .HasColumnType("int");
+
                     b.HasKey("TehtavaId");
+
+                    b.HasIndex("SuoritusId");
 
                     b.ToTable("Tehtavat");
                 });
@@ -408,33 +413,20 @@ namespace TALA.Server.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TALA.Server.Models.Suoritus", b =>
+            modelBuilder.Entity("TALA.Shared.Tehtava", b =>
                 {
-                    b.HasOne("TALA.Server.Models.Tehtava", "Tehtavat")
-                        .WithMany("Suoritukset")
-                        .HasForeignKey("TehtavaId")
+                    b.HasOne("TALA.Shared.Suoritus", "Suoritus")
+                        .WithMany("Tehtavat")
+                        .HasForeignKey("SuoritusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TALA.Server.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("Suoritukset")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Suoritus");
+                });
 
-                    b.Navigation("ApplicationUser");
-
+            modelBuilder.Entity("TALA.Shared.Suoritus", b =>
+                {
                     b.Navigation("Tehtavat");
-                });
-
-            modelBuilder.Entity("TALA.Server.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("Suoritukset");
-                });
-
-            modelBuilder.Entity("TALA.Server.Models.Tehtava", b =>
-                {
-                    b.Navigation("Suoritukset");
                 });
 #pragma warning restore 612, 618
         }

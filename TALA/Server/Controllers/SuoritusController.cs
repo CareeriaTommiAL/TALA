@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TALA.Server.Data;
-using TALA.Server.Models;
+using TALA.Shared;
 
 namespace TALA.Server.Controllers
 {
@@ -30,7 +30,7 @@ namespace TALA.Server.Controllers
 
         // GET: api/Suoritus/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Suoritus>> GetSuoritus(string id)
+        public async Task<ActionResult<Suoritus>> GetSuoritus(int id)
         {
             var suoritus = await _context.Suoritukset.FindAsync(id);
 
@@ -45,9 +45,9 @@ namespace TALA.Server.Controllers
         // PUT: api/Suoritus/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSuoritus(string id, Suoritus suoritus)
+        public async Task<IActionResult> PutSuoritus(int id, Suoritus suoritus)
         {
-            if (id != suoritus.UserId)
+            if (id != suoritus.SuoritusId)
             {
                 return BadRequest();
             }
@@ -79,28 +79,14 @@ namespace TALA.Server.Controllers
         public async Task<ActionResult<Suoritus>> PostSuoritus(Suoritus suoritus)
         {
             _context.Suoritukset.Add(suoritus);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (SuoritusExists(suoritus.UserId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSuoritus", new { id = suoritus.UserId }, suoritus);
+            return CreatedAtAction("GetSuoritus", new { id = suoritus.SuoritusId }, suoritus);
         }
 
         // DELETE: api/Suoritus/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSuoritus(string id)
+        public async Task<IActionResult> DeleteSuoritus(int id)
         {
             var suoritus = await _context.Suoritukset.FindAsync(id);
             if (suoritus == null)
@@ -114,9 +100,9 @@ namespace TALA.Server.Controllers
             return NoContent();
         }
 
-        private bool SuoritusExists(string id)
+        private bool SuoritusExists(int id)
         {
-            return _context.Suoritukset.Any(e => e.UserId == id);
+            return _context.Suoritukset.Any(e => e.SuoritusId == id);
         }
     }
 }

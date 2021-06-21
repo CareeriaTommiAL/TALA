@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TALA.Client", "TALA\Client\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TALA.Shared", "TALA\Shared\TALA.Shared.csproj", "{97689EDE-F5AD-4E83-872B-49D7586A77DC}"
 EndProject
+Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "TALA.AzureArmTemplate", "TALA.AzureArmTemplate\TALA.AzureArmTemplate.deployproj", "{1C2A7C4A-E76D-40AF-8CED-C6126495AB25}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{97689EDE-F5AD-4E83-872B-49D7586A77DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97689EDE-F5AD-4E83-872B-49D7586A77DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97689EDE-F5AD-4E83-872B-49D7586A77DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C2A7C4A-E76D-40AF-8CED-C6126495AB25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C2A7C4A-E76D-40AF-8CED-C6126495AB25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C2A7C4A-E76D-40AF-8CED-C6126495AB25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C2A7C4A-E76D-40AF-8CED-C6126495AB25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace TALA.Server.Data.Migrations
+namespace TALA.Server.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -83,6 +83,20 @@ namespace TALA.Server.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PersistedGrants", x => x.Key);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Suoritukset",
+                columns: table => new
+                {
+                    SuoritusId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Suoritusaika = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Suoritukset", x => x.SuoritusId);
                 });
 
             migrationBuilder.CreateTable(
@@ -191,6 +205,26 @@ namespace TALA.Server.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Tehtavat",
+                columns: table => new
+                {
+                    TehtavaId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Kuvaus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SuoritusId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tehtavat", x => x.TehtavaId);
+                    table.ForeignKey(
+                        name: "FK_Tehtavat_Suoritukset_SuoritusId",
+                        column: x => x.SuoritusId,
+                        principalTable: "Suoritukset",
+                        principalColumn: "SuoritusId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -255,6 +289,11 @@ namespace TALA.Server.Data.Migrations
                 name: "IX_PersistedGrants_SubjectId_SessionId_Type",
                 table: "PersistedGrants",
                 columns: new[] { "SubjectId", "SessionId", "Type" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tehtavat_SuoritusId",
+                table: "Tehtavat",
+                column: "SuoritusId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -281,10 +320,16 @@ namespace TALA.Server.Data.Migrations
                 name: "PersistedGrants");
 
             migrationBuilder.DropTable(
+                name: "Tehtavat");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Suoritukset");
         }
     }
 }

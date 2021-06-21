@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TALA.Server.Data;
 
-namespace TALA.Server.Data.Migrations
+namespace TALA.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210204155844_LisattiinsuoritusTaulu")]
-    partial class LisattiinsuoritusTaulu
+    [Migration("20210208181829_KaannettinFKt")]
+    partial class KaannettinFKt
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -324,27 +324,30 @@ namespace TALA.Server.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("TALA.Server.Models.Suoritus", b =>
+            modelBuilder.Entity("TALA.Shared.Suoritus", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("SuoritusId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<DateTime>("Suoritusaika")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("TehtavaId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Suorituskerrat")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserId", "TehtavaId");
+                    b.HasKey("SuoritusId");
 
                     b.HasIndex("TehtavaId");
 
                     b.ToTable("Suoritukset");
                 });
 
-            modelBuilder.Entity("TALA.Server.Models.Tehtava", b =>
+            modelBuilder.Entity("TALA.Shared.Tehtava", b =>
                 {
                     b.Property<int>("TehtavaId")
                         .ValueGeneratedOnAdd()
@@ -410,33 +413,20 @@ namespace TALA.Server.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TALA.Server.Models.Suoritus", b =>
+            modelBuilder.Entity("TALA.Shared.Suoritus", b =>
                 {
-                    b.HasOne("TALA.Server.Models.Tehtava", "Tehtavat")
-                        .WithMany("Suoritukset")
+                    b.HasOne("TALA.Shared.Tehtava", "Tehtava")
+                        .WithMany("Suoritus")
                         .HasForeignKey("TehtavaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TALA.Server.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("Suoritukset")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-
-                    b.Navigation("Tehtavat");
+                    b.Navigation("Tehtava");
                 });
 
-            modelBuilder.Entity("TALA.Server.Models.ApplicationUser", b =>
+            modelBuilder.Entity("TALA.Shared.Tehtava", b =>
                 {
-                    b.Navigation("Suoritukset");
-                });
-
-            modelBuilder.Entity("TALA.Server.Models.Tehtava", b =>
-                {
-                    b.Navigation("Suoritukset");
+                    b.Navigation("Suoritus");
                 });
 #pragma warning restore 612, 618
         }

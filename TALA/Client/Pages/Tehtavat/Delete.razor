@@ -23,11 +23,11 @@
     [Parameter]
     public string TehtavaId { get; set; }  //ei toiminut int tietotyypillä vaikka kannassa TehtäväId on int
 
-    Tehtavamodel tehtava = new Tehtavamodel();
+    Tehtava tehtava = new Tehtava();
 
     protected override async Task OnInitializedAsync()
     {
-        tehtava = await Http.GetFromJsonAsync<Tehtavamodel>("api/Tehtava/" + TehtavaId);
+        tehtava = await Http.GetFromJsonAsync<Tehtava>("api/Tehtava/" + TehtavaId);
     }
 
     async Task DeleteAsync()

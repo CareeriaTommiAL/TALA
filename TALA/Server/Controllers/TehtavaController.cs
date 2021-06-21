@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TALA.Server.Data;
-using TALA.Server.Models;
+using TALA.Shared;
 
 namespace TALA.Server.Controllers
 {
